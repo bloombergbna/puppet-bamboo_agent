@@ -84,7 +84,7 @@ define bamboo_agent::agent(
     group  => $group,
   }
 
-  $install = Bamboo_Agent::Install["install-agent-${id}"]
+  $install = Bamboo_agent::Install["install-agent-${id}"]
 
   bamboo_agent::service { $id:
     home    => $home,
@@ -98,14 +98,14 @@ define bamboo_agent::agent(
       capabilities     => merge($bamboo_agent::default_capabilities,
                                 $capabilities),
       expand_id_macros => $expand_id_macros,
-      before           => Bamboo_Agent::Service[$id],
+      before           => Bamboo_agent::Service[$id],
       require          => $install,
       user             => $user_name,
       group            => $group,
     }
 
     if $refresh_service {
-       Bamboo_Agent::Capabilities[$id] ~> Bamboo_Agent::Service[$id]
+       Bamboo_agent::Capabilities[$id] ~> Bamboo_agent::Service[$id]
     }
   }
 
@@ -115,8 +115,8 @@ define bamboo_agent::agent(
       'set.TMP'                   => $agent_tmp,
       'wrapper.java.additional.3' => "-Djava.io.tmpdir=${agent_tmp}",
     }
-    bamboo_agent::private_tmp { 
-      $agent_tmp: require => $install, 
+    bamboo_agent::private_tmp {
+      $agent_tmp: require => $install,
                   user    => $user_name,
                   group   => $group,
     }
@@ -128,13 +128,13 @@ define bamboo_agent::agent(
     home       => $home,
     properties => merge($tmp_dir_props,
                         $wrapper_conf_properties),
-    before     => Bamboo_Agent::Service[$id],
+    before     => Bamboo_agent::Service[$id],
     require    => $install,
     user       => $user_name,
     group      => $group,
   }
 
   if $refresh_service {
-    Bamboo_Agent::Wrapper_Conf[$id] ~> Bamboo_Agent::Service[$id]
+    Bamboo_agent::Wrapper_conf[$id] ~> Bamboo_agent::Service[$id]
   }
 }

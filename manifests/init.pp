@@ -156,7 +156,7 @@ class bamboo_agent(
 
   if $java_classname != 'UNDEFINED' {
     include $java_classname
-    Bamboo_Agent::Agent <||> {
+    Bamboo_agent::Agent <||> {
       require => Class[$java_classname]
     }
   }else{
