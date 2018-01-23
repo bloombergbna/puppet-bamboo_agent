@@ -18,10 +18,20 @@ define bamboo_agent::service(
     group   => 'root',
     mode    => '0755',
     content => template('bamboo_agent/init-script.erb'),
+    notify  => Service[$service],
   }
-  ->
+
+  # Workaround to RHEL7
+  if $::osfamily == 'Redhat' and versioncmp($::operatingsystemrelease, '7') >= 0 {
+    $service_provider = 'redhat'
+  } else {
+    $service_provider = undef
+  }
+
   service { $service:
-    ensure    => running,
-    enable    => true,
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    provider   => $service_provider,
   }
 }
