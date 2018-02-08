@@ -3,8 +3,9 @@
 # script.
 # *** This type should be considered private to this module ***
 define bamboo_agent::service(
+  $id             = $title,
+  Boolean $manage = true,
   $home,
-  $id = $title,
   $user,
 ){
 
@@ -28,8 +29,12 @@ define bamboo_agent::service(
     $service_provider = undef
   }
 
+  $ensure_service = $manage ?  {
+    true  => 'running',
+    false => undef,
+  }
   service { $service:
-    ensure     => running,
+    ensure     => $ensure_service,
     enable     => true,
     hasrestart => true,
     provider   => $service_provider,

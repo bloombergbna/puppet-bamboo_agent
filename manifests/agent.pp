@@ -51,20 +51,18 @@
 # "somehost-1".
 #
 define bamboo_agent::agent(
-  $id           = $title,
-  $home         = "${bamboo_agent::install_dir}/agent${title}-home",
-  $wrapper_conf_properties = {},
-  $manage_capabilities     = false,
-  $capabilities            = {},
-  $expand_id_macros        = true,
-  $private_tmp_dir         = false,
-  $refresh_service         = false,
-  $user_name               = $bamboo_agent::user_name,
-  $group                   = $bamboo_agent::user_group,
+  $id                           = $title,
+  $home                         = "${bamboo_agent::install_dir}/agent${title}-home",
+  Hash $wrapper_conf_properties = {},
+  Boolean $manage_capabilities  = false,
+  Boolean $manage_service       = true,
+  Hash $capabilities            = {},
+  Boolean $expand_id_macros     = true,
+  Boolean $private_tmp_dir      = false,
+  Boolean $refresh_service      = false,
+  $user_name                    = $bamboo_agent::user_name,
+  $group                        = $bamboo_agent::user_group,
 ){
-
-  validate_hash($wrapper_conf_properties)
-  validate_hash($capabilities)
 
   if $id !~ /\A[-\w]+\z/ {
     fail("${id} is not a valid agent id")
@@ -90,6 +88,7 @@ define bamboo_agent::agent(
     home    => $home,
     require => $install,
     user    => $user_name,
+    manage  => $manage_service,
   }
 
   if $manage_capabilities {
