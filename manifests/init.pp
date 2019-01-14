@@ -159,8 +159,6 @@ class bamboo_agent(
     Bamboo_agent::Agent <||> {
       require => Class[$java_classname]
     }
-  }else{
-    warning('Java classname set to UNDEFINED, not including or requiring Java')
   }
 
   $agent_list = normalize_agents_arg($agents)
